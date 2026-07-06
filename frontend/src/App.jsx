@@ -2,12 +2,14 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthContext } from './context/AuthContext';
 import { AuthProvider } from './context/AuthProvider';
 import { useContext } from 'react';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Auth from './pages/Auth';
+import Layout from './components/Layout';
+import MemberDashboard from './pages/MemberDashboard';
+import ManagerDashboard from './pages/ManagerDashboard';
 
 const PrivateRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
-  return user ? children : <Navigate to="/login" />;
+  return user ? <Layout>{children}</Layout> : <Navigate to="/login" />;
 };
 
 function App() {
@@ -15,13 +17,21 @@ function App() {
     <Router>
       <AuthProvider>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Auth />} />
+          <Route path="/register" element={<Auth />} />
           <Route 
             path="/" 
             element={
               <PrivateRoute>
-                <div className="p-8 text-center text-2xl font-bold mt-20">Dashboard Coming Next!</div>
+                <MemberDashboard />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/reports/all" 
+            element={
+              <PrivateRoute>
+                <ManagerDashboard />
               </PrivateRoute>
             } 
           />
