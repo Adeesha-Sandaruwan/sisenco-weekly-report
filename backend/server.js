@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./src/routes/auth.routes');
+const projectRoutes = require('./src/routes/project.routes');
+const reportRoutes = require('./src/routes/report.routes');
 
 const app = express();
 
@@ -9,6 +11,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/reports', reportRoutes);
 
 app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message || 'Internal Server Error' });
