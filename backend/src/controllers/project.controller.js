@@ -27,6 +27,25 @@ const getAllProjects = async (req, res) => {
   }
 };
 
+const updateProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description } = req.body;
+    
+    const project = await prisma.project.update({
+      where: { id },
+      data: {
+        name,
+        description
+      }
+    });
+    
+    res.status(200).json(project);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
@@ -45,4 +64,4 @@ const deleteProject = async (req, res) => {
   }
 };
 
-module.exports = { createProject, getAllProjects, deleteProject };
+module.exports = { createProject, getAllProjects, updateProject, deleteProject };
