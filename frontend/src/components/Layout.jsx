@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FileText, LogOut, Menu, Search, X, ClipboardList } from 'lucide-react';
+import { LayoutDashboard, FileText, LogOut, Menu, X, ClipboardList } from 'lucide-react';
 
 export default function Layout({ children }) {
   const { user, logout } = useContext(AuthContext);
@@ -160,16 +160,7 @@ export default function Layout({ children }) {
               <h1 className="mt-3 text-2xl md:text-4xl font-semibold tracking-tight text-white">{currentPage.title}</h1>
               <p className="mt-2 max-w-2xl text-sm md:text-base text-slate-400">{currentPage.subtitle}</p>
             </div>
-            <div className="flex flex-col gap-3 md:min-w-[420px] lg:min-w-[560px]">
-              <div className="hidden md:flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-slate-300">
-                <Search size={16} className="text-slate-400" />
-                <input
-                  type="text"
-                  readOnly
-                  value="Type here..."
-                  className="w-full bg-transparent text-sm text-slate-300 outline-none placeholder:text-slate-500"
-                />
-              </div>
+            <div className="flex flex-col gap-3 md:min-w-[280px] lg:min-w-[360px]">
               <div className="flex items-center justify-end gap-3">
                 <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#5b7cfa] to-cyan-400 text-xs font-semibold text-white shadow-[0_12px_30px_rgba(91,124,250,0.35)]">

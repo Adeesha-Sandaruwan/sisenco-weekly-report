@@ -100,7 +100,20 @@ export default function MemberDashboard() {
   const btnClass = 'premium-button-primary';
 
   if (loading) {
-    return <div className="flex h-[50vh] items-center justify-center text-sm font-semibold uppercase tracking-[0.35em] text-slate-400 animate-pulse">Initializing Workspace...</div>;
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center px-4">
+        <div className="premium-panel flex flex-col items-center gap-5 px-8 py-10 text-center">
+          <div className="relative h-16 w-16">
+            <div className="absolute inset-0 rounded-full border-4 border-white/10 border-t-[#5b7cfa] animate-spin" />
+            <div className="absolute inset-3 rounded-full border border-cyan-400/20 animate-pulse" />
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Loading Workspace</p>
+            <p className="mt-3 text-sm text-slate-300">Preparing your reports and projects...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -124,7 +137,7 @@ export default function MemberDashboard() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {[
             { label: 'Total Reports', value: reportStats.total, icon: <FileText size={18} /> },
             { label: 'Submitted', value: reportStats.submitted, icon: <CheckCircle2 size={18} /> },

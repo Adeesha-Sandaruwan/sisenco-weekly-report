@@ -129,19 +129,32 @@ export default function ManagerDashboard() {
   const complianceRing = analytics.complianceRate * 3.6;
 
   if (loading) {
-    return <div className="flex h-[50vh] items-center justify-center text-sm font-semibold uppercase tracking-[0.35em] text-slate-400 animate-pulse">Loading Analytics...</div>;
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center px-4">
+        <div className="premium-panel flex flex-col items-center gap-5 px-8 py-10 text-center">
+          <div className="relative h-16 w-16">
+            <div className="absolute inset-0 rounded-full border-4 border-white/10 border-t-[#5b7cfa] animate-spin" />
+            <div className="absolute inset-3 rounded-full border border-cyan-400/20 animate-pulse" />
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Loading Analytics</p>
+            <p className="mt-3 text-sm text-slate-300">Preparing the dashboard panels...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="mx-auto max-w-[1600px] space-y-8 text-slate-100 animate-fade-in">
-      <section className="grid gap-6 xl:grid-cols-[1.35fr_0.8fr_0.85fr]">
-        <div className="premium-panel relative overflow-hidden p-8 md:p-10">
+      <section className="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">
+        <div className="premium-panel relative overflow-hidden p-6 md:p-8 xl:p-10">
           <div className="absolute -right-16 top-0 h-56 w-56 rounded-full bg-[#5b7cfa]/20 blur-3xl" />
           <div className="absolute -bottom-16 left-16 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
           <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Pages / Dashboard</p>
           <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-white">Team Analytics</h1>
+              <h1 className="text-3xl md:text-4xl xl:text-5xl font-semibold tracking-tight text-white">Team Analytics</h1>
               <p className="mt-4 max-w-2xl text-sm md:text-base leading-7 text-slate-300">Filter, analyze, and track submission statuses across the entire team from a premium dark control center.</p>
             </div>
             <div className="rounded-[28px] border border-white/10 bg-white/5 px-5 py-4 text-right">
@@ -151,16 +164,16 @@ export default function ManagerDashboard() {
             </div>
           </div>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 2xl:grid-cols-4">
             {stats.map((stat) => (
-              <div key={stat.label} className="rounded-[24px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_40px_rgba(2,6,23,0.2)]">
-                <div className="flex items-start justify-between gap-3">
+              <div key={stat.label} className="rounded-[24px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_40px_rgba(2,6,23,0.2)] min-w-0">
+                <div className="flex items-start justify-between gap-3 min-w-0">
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">{stat.label}</p>
-                    <p className="mt-2 text-3xl font-semibold text-white">{stat.value}</p>
-                    <p className="mt-2 text-xs text-slate-400">{stat.meta}</p>
+                    <p className="mt-2 text-2xl md:text-3xl font-semibold text-white">{stat.value}</p>
+                    <p className="mt-2 text-xs text-slate-400 leading-5">{stat.meta}</p>
                   </div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]">
                     {stat.icon}
                   </div>
                 </div>
@@ -169,64 +182,66 @@ export default function ManagerDashboard() {
           </div>
         </div>
 
-        <div className="premium-card p-6 md:p-8">
-          <div className="flex items-center gap-2 text-slate-200">
-            <TrendingUp size={18} className="text-[#9bb0ff]" />
-            <h2 className="text-sm font-semibold uppercase tracking-[0.35em]">Submission health</h2>
-          </div>
-          <div className="mt-8 flex items-center justify-center">
-            <div className="relative flex h-52 w-52 items-center justify-center rounded-full border border-white/10 bg-slate-950/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)]">
-              <div className="absolute inset-4 rounded-full" style={{ background: `conic-gradient(#5b7cfa ${complianceRing}deg, rgba(255,255,255,0.08) 0deg)` }} />
-              <div className="absolute inset-7 rounded-full bg-slate-950/95" />
-              <div className="relative z-10 text-center">
-                <p className="text-sm text-slate-400">Compliance</p>
-                <p className="mt-2 text-5xl font-semibold text-white">{analytics.complianceRate}%</p>
-                <p className="mt-2 text-xs text-slate-400">Based on submitted reports</p>
+        <div className="space-y-6">
+          <div className="premium-card p-6 md:p-8">
+            <div className="flex items-center gap-2 text-slate-200">
+              <TrendingUp size={18} className="text-[#9bb0ff]" />
+              <h2 className="text-sm font-semibold uppercase tracking-[0.35em]">Submission health</h2>
+            </div>
+            <div className="mt-8 flex items-center justify-center">
+              <div className="relative flex h-52 w-52 items-center justify-center rounded-full border border-white/10 bg-slate-950/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)]">
+                <div className="absolute inset-4 rounded-full" style={{ background: `conic-gradient(#5b7cfa ${complianceRing}deg, rgba(255,255,255,0.08) 0deg)` }} />
+                <div className="absolute inset-7 rounded-full bg-slate-950/95" />
+                <div className="relative z-10 text-center">
+                  <p className="text-sm text-slate-400">Compliance</p>
+                  <p className="mt-2 text-5xl font-semibold text-white">{analytics.complianceRate}%</p>
+                  <p className="mt-2 text-xs text-slate-400">Based on submitted reports</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <div className="rounded-[22px] border border-white/10 bg-white/5 p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Submitted</p>
+                <p className="mt-3 text-2xl font-semibold text-white">{analytics.submittedThisWeek}</p>
+                <p className="mt-1 text-sm text-slate-400">This week</p>
+              </div>
+              <div className="rounded-[22px] border border-white/10 bg-white/5 p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Open blockers</p>
+                <p className="mt-3 text-2xl font-semibold text-white">{analytics.openBlockers}</p>
+                <p className="mt-1 text-sm text-slate-400">Needs attention</p>
               </div>
             </div>
           </div>
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <div className="rounded-[22px] border border-white/10 bg-white/5 p-4">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Submitted</p>
-              <p className="mt-3 text-2xl font-semibold text-white">{analytics.submittedThisWeek}</p>
-              <p className="mt-1 text-sm text-slate-400">This week</p>
-            </div>
-            <div className="rounded-[22px] border border-white/10 bg-white/5 p-4">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Open blockers</p>
-              <p className="mt-3 text-2xl font-semibold text-white">{analytics.openBlockers}</p>
-              <p className="mt-1 text-sm text-slate-400">Needs attention</p>
-            </div>
-          </div>
-        </div>
 
-        <div className="premium-card p-6 md:p-8">
-          <div className="flex items-center gap-2 text-slate-200">
-            <Activity size={18} className="text-[#9bb0ff]" />
-            <h2 className="text-sm font-semibold uppercase tracking-[0.35em]">Recent activity</h2>
-          </div>
+          <div className="premium-card p-6 md:p-8">
+            <div className="flex items-center gap-2 text-slate-200">
+              <Activity size={18} className="text-[#9bb0ff]" />
+              <h2 className="text-sm font-semibold uppercase tracking-[0.35em]">Recent activity</h2>
+            </div>
 
-          <div className="mt-6 space-y-4">
-            {analytics.activityFeed.length === 0 ? (
-              <p className="rounded-2xl border border-dashed border-white/10 bg-white/5 px-4 py-8 text-center text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">No recent activity.</p>
-            ) : (
-              analytics.activityFeed.map((activity) => (
-                <div key={activity.id} className="rounded-[24px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_40px_rgba(2,6,23,0.2)]">
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]">
-                      <FileText size={14} />
+            <div className="mt-6 space-y-4">
+              {analytics.activityFeed.length === 0 ? (
+                <p className="rounded-2xl border border-dashed border-white/10 bg-white/5 px-4 py-8 text-center text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">No recent activity.</p>
+              ) : (
+                analytics.activityFeed.map((activity) => (
+                  <div key={activity.id} className="rounded-[24px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_40px_rgba(2,6,23,0.2)]">
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]">
+                        <FileText size={14} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold text-white">{activity.user.firstName} {activity.user.lastName}</p>
+                        <p className="mt-1 text-sm text-slate-400">Updated {activity.project.name}</p>
+                        <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-500">{new Date(activity.createdAt).toLocaleDateString()} at {new Date(activity.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                      </div>
+                      <span className={`rounded-full px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.35em] ${activity.status === 'PENDING' ? 'bg-amber-500/10 text-amber-200' : activity.status === 'SUBMITTED' ? 'bg-emerald-500/10 text-emerald-200' : 'bg-rose-500/10 text-rose-200'}`}>
+                        {activity.status}
+                      </span>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-white">{activity.user.firstName} {activity.user.lastName}</p>
-                      <p className="mt-1 text-sm text-slate-400">Updated {activity.project.name}</p>
-                      <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-500">{new Date(activity.createdAt).toLocaleDateString()} at {new Date(activity.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                    </div>
-                    <span className={`rounded-full px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.35em] ${activity.status === 'PENDING' ? 'bg-amber-500/10 text-amber-200' : activity.status === 'SUBMITTED' ? 'bg-emerald-500/10 text-emerald-200' : 'bg-rose-500/10 text-rose-200'}`}>
-                      {activity.status}
-                    </span>
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
         </div>
       </section>

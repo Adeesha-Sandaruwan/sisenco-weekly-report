@@ -151,7 +151,7 @@ export default function Auth() {
                     transition: 'transform 850ms cubic-bezier(0.76,0,0.24,1)',
                   }}
                 >
-                  <div className="w-1/2 pr-4 md:pr-6">
+                  <div className="w-1/2 shrink-0 pr-4 md:pr-6">
                     <form onSubmit={handleLoginSubmit} className="flex flex-col gap-5">
                       <div>
                         <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Login</p>
@@ -173,7 +173,7 @@ export default function Auth() {
                     </form>
                   </div>
 
-                  <div className="w-1/2 pl-4 md:pl-6">
+                  <div className="w-1/2 shrink-0 pl-4 md:pl-6">
                     <form onSubmit={handleRegisterSubmit} className="flex flex-col gap-4">
                       <div>
                         <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Register</p>
