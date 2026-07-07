@@ -118,26 +118,26 @@ export default function MemberDashboard() {
 
   return (
     <div className="mx-auto max-w-[1600px] space-y-8 text-slate-100 animate-fade-in">
-      <section className="premium-panel relative overflow-hidden p-8 md:p-10">
+      <section className="premium-panel relative overflow-hidden p-5 sm:p-6 md:p-10">
         <div className="absolute -right-16 top-0 h-56 w-56 rounded-full bg-[#5b7cfa]/20 blur-3xl" />
         <div className="absolute -bottom-16 left-20 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
         <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Pages / Workspace</p>
         <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-white">My Workspace</h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white">My Workspace</h1>
             <p className="mt-4 max-w-2xl text-sm md:text-base leading-7 text-slate-300">Log your progress or review your reporting history in a premium dark workspace built for weekly updates.</p>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <button onClick={() => setActiveTab('new')} className={`rounded-full px-5 py-3 text-sm font-semibold transition ${activeTab === 'new' ? 'bg-gradient-to-r from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]' : 'border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10'}`}>
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <button onClick={() => setActiveTab('new')} className={`w-full rounded-full px-5 py-3 text-sm font-semibold transition sm:w-auto ${activeTab === 'new' ? 'bg-gradient-to-r from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]' : 'border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10'}`}>
               New Report
             </button>
-            <button onClick={() => setActiveTab('history')} className={`rounded-full px-5 py-3 text-sm font-semibold transition ${activeTab === 'history' ? 'bg-gradient-to-r from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]' : 'border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10'}`}>
+            <button onClick={() => setActiveTab('history')} className={`w-full rounded-full px-5 py-3 text-sm font-semibold transition sm:w-auto ${activeTab === 'history' ? 'bg-gradient-to-r from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]' : 'border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10'}`}>
               History
             </button>
           </div>
         </div>
 
-        <div className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-8 grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
           {[
             { label: 'Total Reports', value: reportStats.total, icon: <FileText size={18} /> },
             { label: 'Submitted', value: reportStats.submitted, icon: <CheckCircle2 size={18} /> },
@@ -162,7 +162,7 @@ export default function MemberDashboard() {
       {activeTab === 'new' && (
         <div className="premium-panel p-6 md:p-10 animate-fade-in">
           {successMsg && <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100 animate-slide-down">{successMsg}</div>}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Project Assignment</label>
               <select name="projectId" required value={formData.projectId} onChange={handleChange} className={`${inputClass} appearance-none cursor-pointer`}>
@@ -220,7 +220,7 @@ export default function MemberDashboard() {
           {myReports.length === 0 ? (
             <p className="rounded-2xl border border-dashed border-white/10 bg-white/5 p-6 text-sm font-semibold uppercase tracking-[0.35em] text-slate-400">No reports found.</p>
           ) : myReports.map((report) => (
-            <div key={report.id} className="premium-card group relative flex flex-col p-6 md:p-8 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1">
+            <div key={report.id} className="premium-card group relative flex flex-col p-5 sm:p-6 md:p-8 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1">
               <button onClick={() => handleDelete(report.id)} className="absolute right-6 top-6 text-slate-500 opacity-0 transition-colors group-hover:opacity-100 hover:text-red-300">
                 <Trash2 size={18} />
               </button>
@@ -262,14 +262,14 @@ export default function MemberDashboard() {
 
       {editingReport && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md animate-fade-in">
-          <div className="premium-panel flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden">
-            <div className="flex items-center justify-between border-b border-white/10 p-6 md:p-8">
+          <div className="premium-panel flex max-h-[95vh] w-full max-w-4xl flex-col overflow-hidden">
+            <div className="flex flex-col gap-4 border-b border-white/10 p-5 sm:p-6 md:flex-row md:items-center md:justify-between md:p-8">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Edit</p>
                 <h2 className="mt-3 text-2xl font-semibold text-white tracking-tight">Edit Report</h2>
               </div>
-              <div className="flex items-center gap-3">
-                <button onClick={() => handleDelete(editingReport.id)} className="inline-flex items-center gap-2 rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm font-semibold text-rose-100 transition hover:bg-rose-500/20">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <button onClick={() => handleDelete(editingReport.id)} className="inline-flex items-center justify-center gap-2 rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm font-semibold text-rose-100 transition hover:bg-rose-500/20">
                   <Trash2 size={16} /> Delete
                 </button>
                 <button onClick={() => setEditingReport(null)} className="rounded-full border border-white/10 bg-white/5 p-2 text-slate-200 transition hover:bg-white/10">
@@ -278,7 +278,7 @@ export default function MemberDashboard() {
               </div>
             </div>
 
-            <div className="custom-scrollbar overflow-y-auto p-6 md:p-8">
+            <div className="custom-scrollbar overflow-y-auto p-5 sm:p-6 md:p-8">
               <form id="editForm" onSubmit={handleEditSubmit} className="space-y-6">
                 <div>
                   <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Project Assignment</label>
@@ -327,9 +327,9 @@ export default function MemberDashboard() {
               </form>
             </div>
 
-            <div className="flex justify-end gap-4 border-t border-white/10 bg-white/5 p-6 md:p-8">
-              <button onClick={() => setEditingReport(null)} className="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10">Cancel</button>
-              <button form="editForm" type="submit" className={`${btnClass} gap-2`}>
+            <div className="flex flex-col-reverse gap-3 border-t border-white/10 bg-white/5 p-5 sm:flex-row sm:justify-end sm:p-6 md:p-8">
+              <button onClick={() => setEditingReport(null)} className="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10 sm:w-auto">Cancel</button>
+              <button form="editForm" type="submit" className={`${btnClass} w-full gap-2 sm:w-auto`}>
                 Save Changes <ArrowRight size={16} />
               </button>
             </div>

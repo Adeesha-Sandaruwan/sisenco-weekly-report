@@ -23,6 +23,17 @@
     @apply w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-[#5b7cfa] focus:ring-4 focus:ring-[#5b7cfa]/15;
   }
 
+  select.premium-input {
+    @apply cursor-pointer appearance-none pr-12;
+    background-color: rgba(255, 255, 255, 0.06);
+    color-scheme: dark;
+  }
+
+  select.premium-input option {
+    background-color: #0f172a;
+    color: #e2e8f0;
+  }
+
   .premium-button-primary {
     @apply inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-[#5b7cfa] to-[#2dd4bf] px-5 py-3.5 text-sm font-semibold text-white shadow-[0_14px_32px_rgba(91,124,250,0.35)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_36px_rgba(91,124,250,0.42)];
   }
@@ -78,6 +89,11 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+select,
+option {
+  color-scheme: dark;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
