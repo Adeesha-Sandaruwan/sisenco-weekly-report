@@ -109,253 +109,304 @@ export default function ManagerDashboard() {
     return { submittedThisWeek, complianceRate, openBlockers, trendData, memberStatusData, projectWorkloadData, activityFeed };
   }, [filteredReports, reports]);
 
-  const inputClass = "w-full bg-[#f8fafc] border border-slate-200 px-4 py-3 rounded-xl text-xs font-bold text-slate-700 outline-none focus:bg-white focus:border-slate-900 focus:ring-4 focus:ring-slate-900/10 transition-all duration-300 appearance-none cursor-pointer";
+  const inputClass = 'premium-input';
 
-  if (loading) return <div className="flex items-center justify-center h-[50vh] text-slate-400 font-bold text-sm tracking-widest uppercase animate-pulse">Loading Analytics...</div>;
+  const darkTooltip = {
+    borderRadius: '1rem',
+    border: '1px solid rgba(148,163,184,0.18)',
+    backgroundColor: 'rgba(15,23,42,0.96)',
+    color: '#e2e8f0',
+    boxShadow: '0 20px 40px rgba(2,6,23,0.45)',
+  };
+
+  const stats = [
+    { label: 'Submissions (Week)', value: analytics.submittedThisWeek, meta: 'Updated weekly', icon: <TrendingUp size={22} /> },
+    { label: 'Compliance Rate', value: `${analytics.complianceRate}%`, meta: 'Team-wide progress', icon: <CheckCircle2 size={22} /> },
+    { label: 'Open Blockers', value: analytics.openBlockers, meta: 'Needs attention', icon: <AlertCircle size={22} /> },
+    { label: 'Visible Reports', value: filteredReports.length, meta: 'Current filters', icon: <FileText size={22} /> },
+  ];
+
+  const complianceRing = analytics.complianceRate * 3.6;
+
+  if (loading) {
+    return <div className="flex h-[50vh] items-center justify-center text-sm font-semibold uppercase tracking-[0.35em] text-slate-400 animate-pulse">Loading Analytics...</div>;
+  }
 
   return (
-    <div className="max-w-[1400px] mx-auto opacity-0 animate-[fadeIn_0.8s_cubic-bezier(0.16,1,0.3,1)_forwards]">
-      
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Team Analytics</h1>
-        <p className="text-sm font-medium text-slate-500 mt-2">Filter, analyze, and track submission statuses across the entire team.</p>
-      </div>
-
-      {/* --- SECTION 1: VISUAL ANALYTICS --- */}
-      <div className="flex flex-col xl:flex-row gap-8 mb-10">
-        
-        {/* Left Column: Metrics & Charts */}
-        <div className="xl:w-2/3 flex flex-col gap-8">
-          
-          {/* Primary KPI Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex items-center gap-5 group hover:shadow-lg transition-all duration-500">
-              <div className="w-14 h-14 rounded-2xl bg-blue-50 text-[#5b7cfa] flex items-center justify-center group-hover:scale-110 transition-transform duration-500"><TrendingUp size={24} /></div>
-              <div>
-                <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Submissions (Week)</p>
-                <p className="text-3xl font-extrabold text-slate-900">{analytics.submittedThisWeek}</p>
-              </div>
+    <div className="mx-auto max-w-[1600px] space-y-8 text-slate-100 animate-fade-in">
+      <section className="grid gap-6 xl:grid-cols-[1.35fr_0.8fr_0.85fr]">
+        <div className="premium-panel relative overflow-hidden p-8 md:p-10">
+          <div className="absolute -right-16 top-0 h-56 w-56 rounded-full bg-[#5b7cfa]/20 blur-3xl" />
+          <div className="absolute -bottom-16 left-16 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
+          <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Pages / Dashboard</p>
+          <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-white">Team Analytics</h1>
+              <p className="mt-4 max-w-2xl text-sm md:text-base leading-7 text-slate-300">Filter, analyze, and track submission statuses across the entire team from a premium dark control center.</p>
             </div>
-            
-            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex items-center gap-5 group hover:shadow-lg transition-all duration-500">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-500"><CheckCircle2 size={24} /></div>
-              <div>
-                <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Compliance Rate</p>
-                <p className="text-3xl font-extrabold text-slate-900">{analytics.complianceRate}<span className="text-xl text-slate-400">%</span></p>
-              </div>
-            </div>
-
-            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex items-center gap-5 group hover:shadow-lg transition-all duration-500">
-              <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-500"><AlertCircle size={24} /></div>
-              <div>
-                <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Open Blockers</p>
-                <p className="text-3xl font-extrabold text-slate-900">{analytics.openBlockers}</p>
-              </div>
+            <div className="rounded-[28px] border border-white/10 bg-white/5 px-5 py-4 text-right">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.4em] text-slate-400">Compliance</p>
+              <p className="mt-3 text-4xl font-semibold text-white">{analytics.complianceRate}%</p>
+              <p className="mt-2 text-sm text-slate-400">Team snapshot</p>
             </div>
           </div>
 
-          {/* Chart Row 1: Tasks Completed Trend */}
-          <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-            <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-widest mb-6">Velocity: Tasks Completed Trend</h2>
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={analytics.trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorTasks" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#5b7cfa" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#5b7cfa" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 700 }} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 700 }} />
-                  <Tooltip contentStyle={{ borderRadius: '1rem', border: 'none', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', fontWeight: 'bold' }} />
-                  <Area type="monotone" dataKey="tasks" stroke="#5b7cfa" strokeWidth={3} fillOpacity={1} fill="url(#colorTasks)" animationDuration={1500} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Chart Row 2: Grid for Stacked Bar & Donut */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-              <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-widest mb-6">Status by Team Member</h2>
-              <div className="h-56 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={analytics.memberStatusData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 700 }} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 700 }} />
-                    <Tooltip cursor={{ fill: '#f1f5f9' }} contentStyle={{ borderRadius: '1rem', border: 'none', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', fontWeight: 'bold' }} />
-                    <Legend iconType="circle" wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', paddingTop: '20px' }} />
-                    <Bar dataKey="SUBMITTED" stackId="a" fill="#10b981" radius={[0, 0, 4, 4]} animationDuration={1500} />
-                    <Bar dataKey="PENDING" stackId="a" fill="#f59e0b" animationDuration={1500} />
-                    <Bar dataKey="LATE" stackId="a" fill="#ef4444" radius={[4, 4, 0, 0]} animationDuration={1500} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col items-center">
-              <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-widest mb-2 w-full text-left">Workload by Project (Hrs)</h2>
-              <div className="h-56 w-full relative">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie data={analytics.projectWorkloadData} innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value" stroke="none">
-                      {analytics.projectWorkloadData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip contentStyle={{ borderRadius: '1rem', border: 'none', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="flex flex-wrap justify-center gap-3 mt-4 w-full">
-                {analytics.projectWorkloadData.map(s => (
-                  <div key={s.name} className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase"><div className="w-2.5 h-2.5 rounded-full" style={{backgroundColor: s.color}}></div>{s.name}</div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Right Column: Activity Feed */}
-        <div className="xl:w-1/3">
-          <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] h-full">
-            <div className="flex items-center gap-2 mb-8">
-              <Activity size={20} className="text-[#5b7cfa]" />
-              <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-widest">Recent Activity</h2>
-            </div>
-            
-            <div className="space-y-6">
-              {analytics.activityFeed.length === 0 ? (
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center py-10">No recent activity.</p>
-              ) : (
-                analytics.activityFeed.map((activity, idx) => (
-                  <div key={activity.id} className="relative flex gap-4">
-                    {idx !== analytics.activityFeed.length - 1 && <div className="absolute top-8 left-4 w-[2px] h-full bg-slate-100 -translate-x-1/2 z-0"></div>}
-                    <div className="w-8 h-8 rounded-full bg-slate-50 border-2 border-white shadow-sm flex items-center justify-center flex-shrink-0 z-10 text-slate-400">
-                      <FileText size={12} />
-                    </div>
-                    <div className="pt-1 pb-4">
-                      <p className="text-sm font-bold text-slate-900">
-                        {activity.user.firstName} {activity.user.lastName} <span className="text-slate-500 font-medium">updated a report for</span> {activity.project.name}
-                      </p>
-                      <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mt-1.5">
-                        {new Date(activity.createdAt).toLocaleDateString()} at {new Date(activity.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                      </p>
-                      <div className="mt-2 inline-block">
-                        <span className={`text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg ${
-                          activity.status === 'PENDING' ? 'bg-amber-50 text-amber-600' : activity.status === 'SUBMITTED' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
-                        }`}>{activity.status}</span>
-                      </div>
-                    </div>
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {stats.map((stat) => (
+              <div key={stat.label} className="rounded-[24px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_40px_rgba(2,6,23,0.2)]">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">{stat.label}</p>
+                    <p className="mt-2 text-3xl font-semibold text-white">{stat.value}</p>
+                    <p className="mt-2 text-xs text-slate-400">{stat.meta}</p>
                   </div>
-                ))
-              )}
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]">
+                    {stat.icon}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="premium-card p-6 md:p-8">
+          <div className="flex items-center gap-2 text-slate-200">
+            <TrendingUp size={18} className="text-[#9bb0ff]" />
+            <h2 className="text-sm font-semibold uppercase tracking-[0.35em]">Submission health</h2>
+          </div>
+          <div className="mt-8 flex items-center justify-center">
+            <div className="relative flex h-52 w-52 items-center justify-center rounded-full border border-white/10 bg-slate-950/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)]">
+              <div className="absolute inset-4 rounded-full" style={{ background: `conic-gradient(#5b7cfa ${complianceRing}deg, rgba(255,255,255,0.08) 0deg)` }} />
+              <div className="absolute inset-7 rounded-full bg-slate-950/95" />
+              <div className="relative z-10 text-center">
+                <p className="text-sm text-slate-400">Compliance</p>
+                <p className="mt-2 text-5xl font-semibold text-white">{analytics.complianceRate}%</p>
+                <p className="mt-2 text-xs text-slate-400">Based on submitted reports</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="rounded-[22px] border border-white/10 bg-white/5 p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Submitted</p>
+              <p className="mt-3 text-2xl font-semibold text-white">{analytics.submittedThisWeek}</p>
+              <p className="mt-1 text-sm text-slate-400">This week</p>
+            </div>
+            <div className="rounded-[22px] border border-white/10 bg-white/5 p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Open blockers</p>
+              <p className="mt-3 text-2xl font-semibold text-white">{analytics.openBlockers}</p>
+              <p className="mt-1 text-sm text-slate-400">Needs attention</p>
             </div>
           </div>
         </div>
 
-      </div>
+        <div className="premium-card p-6 md:p-8">
+          <div className="flex items-center gap-2 text-slate-200">
+            <Activity size={18} className="text-[#9bb0ff]" />
+            <h2 className="text-sm font-semibold uppercase tracking-[0.35em]">Recent activity</h2>
+          </div>
 
-      {/* --- SECTION 2: ACTIONABLE REPORTS GRID --- */}
-      
-      {/* Advanced Filter Engine */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] mb-8 flex flex-col md:flex-row gap-4 items-end z-20 relative">
-        <div className="w-full md:w-1/4">
-          <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Team Member</label>
-          <select value={filterMember} onChange={(e) => setFilterMember(e.target.value)} className={inputClass}>
-            <option value="">All Members</option>
-            {uniqueMembers.map(m => <option key={m.id} value={m.id}>{m.firstName} {m.lastName}</option>)}
-          </select>
+          <div className="mt-6 space-y-4">
+            {analytics.activityFeed.length === 0 ? (
+              <p className="rounded-2xl border border-dashed border-white/10 bg-white/5 px-4 py-8 text-center text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">No recent activity.</p>
+            ) : (
+              analytics.activityFeed.map((activity) => (
+                <div key={activity.id} className="rounded-[24px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_40px_rgba(2,6,23,0.2)]">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]">
+                      <FileText size={14} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-white">{activity.user.firstName} {activity.user.lastName}</p>
+                      <p className="mt-1 text-sm text-slate-400">Updated {activity.project.name}</p>
+                      <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-500">{new Date(activity.createdAt).toLocaleDateString()} at {new Date(activity.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    </div>
+                    <span className={`rounded-full px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.35em] ${activity.status === 'PENDING' ? 'bg-amber-500/10 text-amber-200' : activity.status === 'SUBMITTED' ? 'bg-emerald-500/10 text-emerald-200' : 'bg-rose-500/10 text-rose-200'}`}>
+                      {activity.status}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-        <div className="w-full md:w-1/4">
-          <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Project</label>
-          <select value={filterProject} onChange={(e) => setFilterProject(e.target.value)} className={inputClass}>
-            <option value="">All Projects</option>
-            {uniqueProjects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-          </select>
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[1.55fr_1fr]">
+        <div className="premium-panel p-6 md:p-8">
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Analytics</p>
+              <h2 className="mt-3 text-xl font-semibold text-white">Velocity: Tasks Completed Trend</h2>
+            </div>
+            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">This month</span>
+          </div>
+          <div className="h-72 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={analytics.trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorTasks" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#5b7cfa" stopOpacity={0.45} />
+                    <stop offset="95%" stopColor="#5b7cfa" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 700 }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 700 }} />
+                <Tooltip contentStyle={darkTooltip} cursor={{ stroke: 'rgba(91,124,250,0.12)' }} />
+                <Area type="monotone" dataKey="tasks" stroke="#5b7cfa" strokeWidth={3} fillOpacity={1} fill="url(#colorTasks)" animationDuration={1500} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div className="w-full md:w-1/4">
-          <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Status</label>
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className={inputClass}>
-            <option value="">All Statuses</option>
-            <option value="PENDING">Pending</option>
-            <option value="SUBMITTED">Submitted</option>
-            <option value="LATE">Late</option>
-          </select>
+
+        <div className="premium-panel p-6 md:p-8">
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Team status</p>
+              <h2 className="mt-3 text-xl font-semibold text-white">Status by Team Member</h2>
+            </div>
+          </div>
+          <div className="h-72 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={analytics.memberStatusData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 700 }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94a3b8', fontWeight: 700 }} />
+                <Tooltip cursor={{ fill: 'rgba(255,255,255,0.04)' }} contentStyle={darkTooltip} />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', paddingTop: '20px', color: '#cbd5e1' }} />
+                <Bar dataKey="SUBMITTED" stackId="a" fill="#10b981" radius={[0, 0, 4, 4]} animationDuration={1500} />
+                <Bar dataKey="PENDING" stackId="a" fill="#f59e0b" animationDuration={1500} />
+                <Bar dataKey="LATE" stackId="a" fill="#ef4444" radius={[4, 4, 0, 0]} animationDuration={1500} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div className="w-full md:w-auto flex-1">
-          <button onClick={clearFilters} className="w-full h-[40px] flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-xs rounded-xl transition-colors border border-slate-200">
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
+        <div className="premium-panel p-6 md:p-8">
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Workload</p>
+              <h2 className="mt-3 text-xl font-semibold text-white">Workload by Project</h2>
+            </div>
+          </div>
+          <div className="flex h-72 w-full items-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={analytics.projectWorkloadData} innerRadius={60} outerRadius={92} paddingAngle={5} dataKey="value" stroke="none">
+                  {analytics.projectWorkloadData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={darkTooltip} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-3">
+            {analytics.projectWorkloadData.map((project) => (
+              <div key={project.name} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-300">
+                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: project.color }} />
+                {project.name}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="premium-panel p-6 md:p-8">
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Filters</p>
+              <h2 className="mt-3 text-xl font-semibold text-white">Refine the reports</h2>
+            </div>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-3">
+            <div>
+              <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Team Member</label>
+              <select value={filterMember} onChange={(e) => setFilterMember(e.target.value)} className={inputClass}>
+                <option value="">All Members</option>
+                {uniqueMembers.map((member) => <option key={member.id} value={member.id}>{member.firstName} {member.lastName}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Project</label>
+              <select value={filterProject} onChange={(e) => setFilterProject(e.target.value)} className={inputClass}>
+                <option value="">All Projects</option>
+                {uniqueProjects.map((project) => <option key={project.id} value={project.id}>{project.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Status</label>
+              <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className={inputClass}>
+                <option value="">All Statuses</option>
+                <option value="PENDING">Pending</option>
+                <option value="SUBMITTED">Submitted</option>
+                <option value="LATE">Late</option>
+              </select>
+            </div>
+          </div>
+          <button onClick={clearFilters} className="mt-4 inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10">
             <Filter size={14} /> Clear Filters
           </button>
         </div>
-      </div>
+      </section>
 
-      {/* Actionable Filtered Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 pb-10">
+      <section className="grid grid-cols-1 gap-6 pb-10 lg:grid-cols-2 2xl:grid-cols-3">
         {filteredReports.map((report) => (
-          <div key={report.id} className="bg-white rounded-[2rem] p-8 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
-            
-            <div className="flex justify-between items-start mb-6">
+          <div key={report.id} className="premium-card flex flex-col p-6 md:p-8 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-[0_24px_80px_rgba(2,6,23,0.45)]">
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="font-extrabold text-slate-900 text-lg flex items-center gap-2">
-                  <User size={18} className="text-[#5b7cfa]" />
+                <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
+                  <User size={18} className="text-[#9bb0ff]" />
                   {report.user.firstName} {report.user.lastName}
                 </h3>
-                <p className="text-sm font-bold text-slate-400 flex items-center gap-2 mt-1.5">
+                <p className="mt-1.5 flex items-center gap-2 text-sm text-slate-400">
                   <Briefcase size={14} /> {report.project.name}
                 </p>
               </div>
-              <div className="relative group cursor-pointer">
-                <select 
-                  value={report.status} 
-                  onChange={(e) => handleStatusChange(report.id, e.target.value)}
-                  className={`text-[10px] uppercase tracking-wider font-extrabold px-4 py-2 rounded-xl outline-none cursor-pointer appearance-none text-center transition-all shadow-sm ${
-                    report.status === 'PENDING' ? 'bg-amber-50 text-amber-600 border border-amber-200/60 hover:bg-amber-100' :
-                    report.status === 'SUBMITTED' ? 'bg-emerald-50 text-emerald-600 border border-emerald-200/60 hover:bg-emerald-100' :
-                    'bg-red-50 text-red-600 border border-red-200/60 hover:bg-red-100'
-                  }`}
-                >
-                  <option value="PENDING">Pending</option>
-                  <option value="SUBMITTED">Submitted</option>
-                  <option value="LATE">Late</option>
-                </select>
-              </div>
+              <select
+                value={report.status}
+                onChange={(e) => handleStatusChange(report.id, e.target.value)}
+                className={`appearance-none rounded-full border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] outline-none transition ${
+                  report.status === 'PENDING' ? 'border-amber-500/20 bg-amber-500/10 text-amber-100' :
+                  report.status === 'SUBMITTED' ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-100' :
+                  'border-rose-500/20 bg-rose-500/10 text-rose-100'
+                }`}
+              >
+                <option value="PENDING">Pending</option>
+                <option value="SUBMITTED">Submitted</option>
+                <option value="LATE">Late</option>
+              </select>
             </div>
 
-            <div className="flex gap-6 mb-8 pb-6 border-b border-slate-100/80 text-sm font-bold text-slate-400">
+            <div className="mt-6 flex flex-wrap gap-4 border-b border-white/10 pb-6 text-sm text-slate-400">
               <span className="flex items-center gap-2"><Calendar size={16} /> {new Date(report.weekStartDate).toLocaleDateString()}</span>
               <span className="flex items-center gap-2"><Clock size={16} /> {report.hoursWorked || 0} hrs</span>
             </div>
 
-            <div className="flex-1 space-y-6">
+            <div className="mt-6 flex-1 space-y-6">
               <div>
-                <span className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Tasks Planned</span>
-                <p className="text-sm font-medium text-slate-700 leading-relaxed">{report.tasksPlanned}</p>
+                <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Tasks Planned</span>
+                <p className="text-sm leading-7 text-slate-200">{report.tasksPlanned}</p>
               </div>
               <div>
-                <span className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Tasks Completed</span>
-                <p className="text-sm font-medium text-slate-700 leading-relaxed">{report.tasksCompleted}</p>
+                <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Tasks Completed</span>
+                <p className="text-sm leading-7 text-slate-200">{report.tasksCompleted}</p>
               </div>
               {report.blockers && (
-                <div className="p-4 bg-red-50/50 rounded-2xl border border-red-100/50">
-                  <span className="block text-[10px] font-extrabold text-red-500 uppercase tracking-widest mb-1.5">Blockers</span>
-                  <p className="text-sm font-medium text-red-700 leading-relaxed">{report.blockers}</p>
+                <div className="rounded-[24px] border border-rose-500/15 bg-rose-500/10 p-4">
+                  <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.35em] text-rose-200">Blockers</span>
+                  <p className="text-sm leading-7 text-rose-100">{report.blockers}</p>
                 </div>
               )}
               {report.notes && (
                 <div>
-                  <span className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Notes & Links</span>
-                  <p className="text-sm font-medium text-[#5b7cfa] leading-relaxed break-all">{report.notes}</p>
+                  <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Notes & Links</span>
+                  <p className="break-all text-sm leading-7 text-[#9bb0ff]">{report.notes}</p>
                 </div>
               )}
             </div>
-
           </div>
         ))}
-      </div>
-
+      </section>
     </div>
   );
 }
