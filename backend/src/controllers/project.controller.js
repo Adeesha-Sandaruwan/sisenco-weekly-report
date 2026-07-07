@@ -30,10 +30,18 @@ const getAllProjects = async (req, res) => {
 const deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
-    await prisma.project.delete({ where: { id } });
-    res.status(200).json({ message: 'Project deleted successfully' });
+    
+    await prisma.report.deleteMany({
+      where: { projectId: id }
+    });
+
+    await prisma.project.delete({ 
+      where: { id } 
+    });
+    
+    res.status(200).json({ message: 'Project and associated reports deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Cannot delete project. It may have existing reports tied to it.' });
+    res.status(500).json({ message: error.message });
   }
 };
 
