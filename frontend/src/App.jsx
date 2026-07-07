@@ -6,6 +6,7 @@ import Auth from './pages/Auth';
 import Layout from './components/Layout';
 import MemberDashboard from './pages/MemberDashboard';
 import ManagerDashboard from './pages/ManagerDashboard';
+import Projects from './pages/Projects'; // Added import
 
 const PrivateRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
@@ -19,22 +20,11 @@ function App() {
         <Routes>
           <Route path="/login" element={<Auth />} />
           <Route path="/register" element={<Auth />} />
-          <Route 
-            path="/" 
-            element={
-              <PrivateRoute>
-                <MemberDashboard />
-              </PrivateRoute>
-            } 
-          />
-          <Route 
-            path="/reports/all" 
-            element={
-              <PrivateRoute>
-                <ManagerDashboard />
-              </PrivateRoute>
-            } 
-          />
+          
+          <Route path="/" element={<PrivateRoute><MemberDashboard /></PrivateRoute>} />
+          <Route path="/reports/all" element={<PrivateRoute><ManagerDashboard /></PrivateRoute>} />
+          <Route path="/projects" element={<PrivateRoute><Projects /></PrivateRoute>} /> 
+          
         </Routes>
       </AuthProvider>
     </Router>

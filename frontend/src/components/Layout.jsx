@@ -11,10 +11,11 @@ export default function Layout({ children }) {
   const navLinks = user?.role === 'MANAGER' 
     ? [
         { name: 'Overview', path: '/', icon: <LayoutDashboard size={20} /> },
-        { name: 'All Reports', path: '/reports/all', icon: <FileText size={20} /> }
+        { name: 'All Reports', path: '/reports/all', icon: <FileText size={20} /> },
+        { name: 'Projects', path: '/projects', icon: <FileText size={20} /> } // Added this line
       ]
     : [
-        { name: 'My Reports', path: '/', icon: <FileText size={20} /> },
+        { name: 'My Dashboard', path: '/', icon: <FileText size={20} /> },
       ];
 
   const handleLogout = () => {
