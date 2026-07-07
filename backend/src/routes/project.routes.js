@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { createProject, getProjects } = require('../controllers/project.controller');
+const { createProject, getAllProjects, deleteProject } = require('../controllers/project.controller');
 const { verifyToken, isManager } = require('../middleware/auth.middleware');
 
-router.get('/', verifyToken, getProjects);
 router.post('/', [verifyToken, isManager], createProject);
+router.get('/', verifyToken, getAllProjects);
+router.delete('/:id', [verifyToken, isManager], deleteProject);
 
 module.exports = router;
