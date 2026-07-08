@@ -20,8 +20,15 @@ function App() {
         <Routes>
           <Route path="/login" element={<Auth />} />
           <Route path="/register" element={<Auth />} />
-          
-          <Route path="/" element={<PrivateRoute><MemberDashboard /></PrivateRoute>} />
+
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <RoleAwareHome />
+              </PrivateRoute>
+            }
+          />
           <Route path="/reports/all" element={<PrivateRoute><ManagerDashboard /></PrivateRoute>} />
           <Route path="/projects" element={<PrivateRoute><Projects /></PrivateRoute>} /> 
           
@@ -30,5 +37,10 @@ function App() {
     </Router>
   );
 }
+
+const RoleAwareHome = () => {
+  const { user } = useContext(AuthContext);
+  return user?.role === 'MANAGER' ? <Navigate to="/reports/all" replace /> : <MemberDashboard />;
+};
 
 export default App;
