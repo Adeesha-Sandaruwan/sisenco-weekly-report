@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import api from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
-import { Briefcase, Plus, Trash2, Edit2, X, Users, Check, Sparkles, ArrowRight, ShieldCheck, FileText } from 'lucide-react';
+import { Briefcase, Plus, Trash2, Edit2, X, Users, Check, ArrowRight, ShieldCheck, FileText } from 'lucide-react';
 
 export default function Projects() {
   const { user } = useContext(AuthContext);
@@ -116,12 +116,20 @@ export default function Projects() {
         <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Pages / Projects</p>
         <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-white">Project Management</h1>
-            <p className="mt-4 max-w-2xl text-sm md:text-base leading-7 text-slate-300">Create and manage workspaces for your team to log reports against with the same premium visual style.</p>
+            <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-white">
+              {user?.role === 'MANAGER' ? 'Project Management' : 'Projects'}
+            </h1>
+            <p className="mt-4 max-w-2xl text-sm md:text-base leading-7 text-slate-300">
+              {user?.role === 'MANAGER' 
+                ? 'Create and manage workspaces for your team to log reports against with the same premium visual style.' 
+                : 'View the workspaces and projects you are assigned to.'}
+            </p>
           </div>
-          <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200">
-            <ShieldCheck size={16} className="text-[#9bb0ff]" /> Manager controls enabled
-          </div>
+          {user?.role === 'MANAGER' && (
+            <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200">
+              <ShieldCheck size={16} className="text-[#9bb0ff]" /> Manager controls enabled
+            </div>
+          )}
         </div>
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
