@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, FileText, LogOut, Menu, X, ClipboardList } from 'lucide-react';
+import AIChatWidget from './AIChatWidget'; // Injecting the AI Chat Widget
 
 export default function Layout({ children }) {
   const { user, logout } = useContext(AuthContext);
@@ -180,6 +181,9 @@ export default function Layout({ children }) {
             {children}
           </div>
         </div>
+        
+        {/* INJECTED AI CHAT WIDGET HERE */}
+        {user?.role === 'MANAGER' && <AIChatWidget />}
       </main>
     </div>
   );
