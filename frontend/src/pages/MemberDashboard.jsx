@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
-import { Calendar, Clock, Edit2, X, Trash2, Sparkles, ArrowRight, FileText, CheckCircle2 } from 'lucide-react';
+import { Calendar, Clock, Edit2, X, Trash2, ArrowRight, FileText, CheckCircle2 } from 'lucide-react';
 
 export default function MemberDashboard() {
   const [activeTab, setActiveTab] = useState('new');
@@ -46,7 +46,7 @@ export default function MemberDashboard() {
     e.preventDefault();
     try {
       const res = await api.post('/reports', formData);
-      const assignedProject = projects.find((project) => project.id === formData.projectId);
+      const assignedProject = projects.find((project) => String(project.id) === String(formData.projectId));
       const newReport = { ...res.data, project: assignedProject };
       setMyReports((prev) => [newReport, ...prev]);
 
@@ -119,19 +119,19 @@ export default function MemberDashboard() {
   return (
     <div className="mx-auto max-w-[1600px] space-y-8 text-slate-100 animate-fade-in">
       <section className="premium-panel relative overflow-hidden p-5 sm:p-6 md:p-10">
-        <div className="absolute -right-16 top-0 h-56 w-56 rounded-full bg-[#5b7cfa]/20 blur-3xl" />
-        <div className="absolute -bottom-16 left-20 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
+        <div className="absolute -right-16 top-0 h-56 w-56 rounded-full bg-[#5b7cfa]/20 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-16 left-20 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl pointer-events-none" />
         <p className="text-[10px] font-semibold uppercase tracking-[0.45em] text-slate-400">Pages / Workspace</p>
         <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white">My Workspace</h1>
             <p className="mt-4 max-w-2xl text-sm md:text-base leading-7 text-slate-300">Log your progress or review your reporting history in a premium dark workspace built for weekly updates.</p>
           </div>
-          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <button onClick={() => setActiveTab('new')} className={`w-full rounded-full px-5 py-3 text-sm font-semibold transition sm:w-auto ${activeTab === 'new' ? 'bg-gradient-to-r from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]' : 'border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10'}`}>
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row z-10">
+            <button type="button" onClick={() => setActiveTab('new')} className={`w-full rounded-full px-5 py-3 text-sm font-semibold transition sm:w-auto ${activeTab === 'new' ? 'bg-gradient-to-r from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]' : 'border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10'}`}>
               New Report
             </button>
-            <button onClick={() => setActiveTab('history')} className={`w-full rounded-full px-5 py-3 text-sm font-semibold transition sm:w-auto ${activeTab === 'history' ? 'bg-gradient-to-r from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]' : 'border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10'}`}>
+            <button type="button" onClick={() => setActiveTab('history')} className={`w-full rounded-full px-5 py-3 text-sm font-semibold transition sm:w-auto ${activeTab === 'history' ? 'bg-gradient-to-r from-[#5b7cfa] to-cyan-400 text-white shadow-[0_14px_30px_rgba(91,124,250,0.35)]' : 'border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10'}`}>
               History
             </button>
           </div>
@@ -144,7 +144,7 @@ export default function MemberDashboard() {
             { label: 'Pending', value: reportStats.pending, icon: <Clock size={18} /> },
             { label: 'Hours Logged', value: reportStats.hours, icon: <Clock size={18} /> },
           ].map((item) => (
-            <div key={item.label} className="rounded-[24px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_40px_rgba(2,6,23,0.2)]">
+            <div key={item.label} className="rounded-[24px] border border-white/10 bg-white/5 p-4 shadow-[0_18px_40px_rgba(2,6,23,0.2)] z-10 relative">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">{item.label}</p>
@@ -227,7 +227,7 @@ export default function MemberDashboard() {
 
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-white pr-8">{report.project.name}</h3>
+                  <h3 className="text-lg font-semibold text-white pr-8">{report.project?.name || 'Unknown Project'}</h3>
                   <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-slate-400">
                     <span className="flex items-center gap-1.5"><Calendar size={14} /> {new Date(report.weekStartDate).toLocaleDateString()} - {new Date(report.weekEndDate).toLocaleDateString()}</span>
                     <span className="flex items-center gap-1.5"><Clock size={14} /> {report.hoursWorked || 0} hrs</span>

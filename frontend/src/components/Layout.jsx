@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, FileText, LogOut, Menu, X, ClipboardList } from 'lucide-react';
+import AIChatWidget from './AIChatWidget'; // Injecting the AI Chat Widget
 
 export default function Layout({ children }) {
   const { user, logout } = useContext(AuthContext);
@@ -26,7 +27,9 @@ export default function Layout({ children }) {
     '/projects': {
       breadcrumb: 'Pages / Projects',
       title: 'Projects',
-      subtitle: 'Create and manage the workspaces your team reports against.',
+      subtitle: user?.role === 'MANAGER'
+        ? 'Create and manage the workspaces your team reports against.'
+        : 'View the workspaces and projects you are assigned to.',
     },
   };
 
@@ -54,7 +57,6 @@ export default function Layout({ children }) {
         <div className="absolute top-48 -right-24 h-96 w-96 rounded-full bg-cyan-400/10 blur-3xl animate-float-slow" />
       </div>
       
-      {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-72 bg-slate-950/80 border-r border-white/10 fixed h-full z-20 backdrop-blur-2xl shadow-[8px_0_32px_rgba(2,6,23,0.45)]">
         <div className="h-24 flex items-center px-8 border-b border-white/10">
           <div className="flex items-center gap-3">
@@ -101,7 +103,6 @@ export default function Layout({ children }) {
         </div>
       </aside>
 
-      {/* Mobile Top Navbar */}
       <div className="md:hidden fixed top-0 w-full h-20 bg-slate-950/80 backdrop-blur-xl border-b border-white/10 flex items-center justify-between px-6 z-50 transition-all text-white">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-[#5b7cfa] to-cyan-400 shadow-[0_10px_30px_rgba(91,124,250,0.35)]">
@@ -117,7 +118,6 @@ export default function Layout({ children }) {
         </button>
       </div>
 
-      {/* Mobile Cinematic Menu Dropdown */}
       <div className={`md:hidden fixed inset-0 top-20 bg-slate-950/95 backdrop-blur-2xl z-40 transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] ${isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}`}>
         <div className="flex flex-col p-6 gap-4">
           {navLinks.map((link) => {
@@ -150,7 +150,6 @@ export default function Layout({ children }) {
         </div>
       </div>
 
-      {/* Main Content Area */}
       <main className="relative flex-1 md:ml-72 pt-24 md:pt-0 p-4 md:p-6 xl:p-8">
         <div className="relative z-10 max-w-[1600px] mx-auto">
           <header className="premium-panel mb-6 flex flex-col gap-5 px-5 py-5 md:flex-row md:items-center md:justify-between md:px-6">
@@ -182,6 +181,9 @@ export default function Layout({ children }) {
             {children}
           </div>
         </div>
+        
+        {/* INJECTED AI CHAT WIDGET HERE */}
+        {user?.role === 'MANAGER' && <AIChatWidget />}
       </main>
     </div>
   );
