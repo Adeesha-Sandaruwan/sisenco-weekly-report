@@ -1,6 +1,78 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
-import { Calendar, Clock, Edit2, X, Trash2, ArrowRight, FileText, CheckCircle2 } from 'lucide-react';
+import { Calendar, Clock, Edit2, X, Trash2, ArrowRight, FileText, CheckCircle2, Plus } from 'lucide-react';
+
+const InteractivePointInput = ({ label, name, value, onChange, placeholder }) => {
+  const [currentInput, setCurrentInput] = useState('');
+  const items = value ? value.split('\n').filter(item => item.trim() !== '') : [];
+
+  const handleAdd = (e) => {
+    e.preventDefault();
+    if (currentInput.trim()) {
+      const newItems = [...items, currentInput.trim()];
+      onChange({ target: { name, value: newItems.join('\n') } });
+      setCurrentInput('');
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAdd(e);
+    }
+  };
+
+  const handleRemove = (indexToRemove) => {
+    const newItems = items.filter((_, index) => index !== indexToRemove);
+    onChange({ target: { name, value: newItems.join('\n') } });
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">
+        {label}
+      </label>
+      
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={currentInput}
+          onChange={(e) => setCurrentInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder || `Add a point...`}
+          className="premium-input flex-1"
+        />
+        <button
+          type="button"
+          onClick={handleAdd}
+          className="flex h-full min-h-[42px] items-center justify-center rounded-xl bg-white/10 px-4 text-slate-200 transition hover:bg-white/20"
+        >
+          <Plus size={18} />
+        </button>
+      </div>
+
+      {items.length > 0 && (
+        <ul className="mt-3 flex flex-col gap-2">
+          {items.map((item, index) => (
+            <li
+              key={index}
+              className="flex items-start justify-between gap-3 rounded-xl border border-white/5 bg-white/5 p-3 text-sm text-slate-200 shadow-sm"
+            >
+              <span className="leading-relaxed whitespace-pre-wrap">{item}</span>
+              <button
+                type="button"
+                onClick={() => handleRemove(index)}
+                className="mt-0.5 text-slate-500 transition hover:text-rose-400"
+              >
+                <X size={16} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
 
 export default function MemberDashboard() {
   const [activeTab, setActiveTab] = useState('new');
@@ -9,6 +81,7 @@ export default function MemberDashboard() {
   const [loading, setLoading] = useState(true);
   const [successMsg, setSuccessMsg] = useState('');
   const [editingReport, setEditingReport] = useState(null);
+  
   const [formData, setFormData] = useState({
     projectId: '',
     weekStartDate: '',
@@ -40,6 +113,7 @@ export default function MemberDashboard() {
   }, []);
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  
   const handleEditChange = (e) => setEditingReport({ ...editingReport, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
@@ -162,7 +236,7 @@ export default function MemberDashboard() {
       {activeTab === 'new' && (
         <div className="premium-panel p-6 md:p-10 animate-fade-in">
           {successMsg && <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100 animate-slide-down">{successMsg}</div>}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-8">
             <div>
               <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Project Assignment</label>
               <select name="projectId" required value={formData.projectId} onChange={handleChange} className={`${inputClass} appearance-none cursor-pointer`}>
@@ -187,30 +261,44 @@ export default function MemberDashboard() {
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Tasks Planned</label>
-                <textarea name="tasksPlanned" required rows="4" value={formData.tasksPlanned} onChange={handleChange} className={`${inputClass} resize-none`} />
-              </div>
-              <div>
-                <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Tasks Completed</label>
-                <textarea name="tasksCompleted" required rows="4" value={formData.tasksCompleted} onChange={handleChange} className={`${inputClass} resize-none`} />
-              </div>
+              <InteractivePointInput
+                label="Tasks Planned"
+                name="tasksPlanned"
+                value={formData.tasksPlanned}
+                onChange={handleChange}
+                placeholder="Press Enter to add task..."
+              />
+              <InteractivePointInput
+                label="Tasks Completed"
+                name="tasksCompleted"
+                value={formData.tasksCompleted}
+                onChange={handleChange}
+                placeholder="Press Enter to add completed task..."
+              />
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Blockers / Issues</label>
-                <textarea name="blockers" rows="3" value={formData.blockers} onChange={handleChange} className={`${inputClass} resize-none`} />
-              </div>
-              <div>
-                <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Notes & Links (Optional)</label>
-                <textarea name="notes" rows="3" value={formData.notes} onChange={handleChange} placeholder="Paste GitHub PRs, Figma links, etc." className={`${inputClass} resize-none`} />
-              </div>
+              <InteractivePointInput
+                label="Blockers / Issues"
+                name="blockers"
+                value={formData.blockers}
+                onChange={handleChange}
+                placeholder="Any blockers this week?"
+              />
+              <InteractivePointInput
+                label="Notes & Links (Optional)"
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                placeholder="Paste links and press Enter..."
+              />
             </div>
 
-            <button type="submit" className={`${btnClass} w-full sm:w-auto`}>
-              Submit Report <ArrowRight size={16} />
-            </button>
+            <div className="pt-4">
+              <button type="submit" className={`${btnClass} w-full sm:w-auto`}>
+                Submit Report <ArrowRight size={16} />
+              </button>
+            </div>
           </form>
         </div>
       )}
@@ -242,17 +330,21 @@ export default function MemberDashboard() {
               <div className="mt-6 space-y-5">
                 <div>
                   <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Completed</span>
-                  <p className="text-sm leading-7 text-slate-200">{report.tasksCompleted}</p>
+                  <ul className="list-inside list-disc space-y-1 text-sm leading-7 text-slate-200">
+                    {report.tasksCompleted ? report.tasksCompleted.split('\n').map((item, i) => <li key={i}>{item}</li>) : <li>No tasks recorded.</li>}
+                  </ul>
                 </div>
                 {report.notes && (
                   <div>
                     <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Notes / Links</span>
-                    <p className="break-all text-sm leading-7 text-[#9bb0ff]">{report.notes}</p>
+                    <ul className="list-inside list-disc space-y-1 break-all text-sm leading-7 text-[#9bb0ff]">
+                      {report.notes.split('\n').map((item, i) => <li key={i}>{item}</li>)}
+                    </ul>
                   </div>
                 )}
               </div>
 
-              <button onClick={() => openEditModal(report)} className="mt-8 inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10">
+              <button onClick={() => openEditModal(report)} className="mt-auto pt-8 inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-transparent px-4 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/5">
                 <Edit2 size={16} /> Edit Report
               </button>
             </div>
@@ -279,7 +371,7 @@ export default function MemberDashboard() {
             </div>
 
             <div className="custom-scrollbar overflow-y-auto p-5 sm:p-6 md:p-8">
-              <form id="editForm" onSubmit={handleEditSubmit} className="space-y-6">
+              <form id="editForm" onSubmit={handleEditSubmit} className="space-y-8">
                 <div>
                   <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Project Assignment</label>
                   <select name="projectId" required value={editingReport.projectId} onChange={handleEditChange} className={`${inputClass} appearance-none cursor-pointer`}>
@@ -304,25 +396,33 @@ export default function MemberDashboard() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
-                    <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Tasks Planned</label>
-                    <textarea name="tasksPlanned" required rows="3" value={editingReport.tasksPlanned} onChange={handleEditChange} className={`${inputClass} resize-none`} />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Tasks Completed</label>
-                    <textarea name="tasksCompleted" required rows="3" value={editingReport.tasksCompleted} onChange={handleEditChange} className={`${inputClass} resize-none`} />
-                  </div>
+                  <InteractivePointInput
+                    label="Tasks Planned"
+                    name="tasksPlanned"
+                    value={editingReport.tasksPlanned || ''}
+                    onChange={handleEditChange}
+                  />
+                  <InteractivePointInput
+                    label="Tasks Completed"
+                    name="tasksCompleted"
+                    value={editingReport.tasksCompleted || ''}
+                    onChange={handleEditChange}
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
-                    <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Blockers</label>
-                    <input type="text" name="blockers" value={editingReport.blockers || ''} onChange={handleEditChange} className={inputClass} />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Notes & Links</label>
-                    <input type="text" name="notes" value={editingReport.notes || ''} onChange={handleEditChange} className={inputClass} />
-                  </div>
+                  <InteractivePointInput
+                    label="Blockers"
+                    name="blockers"
+                    value={editingReport.blockers || ''}
+                    onChange={handleEditChange}
+                  />
+                  <InteractivePointInput
+                    label="Notes & Links"
+                    name="notes"
+                    value={editingReport.notes || ''}
+                    onChange={handleEditChange}
+                  />
                 </div>
               </form>
             </div>
