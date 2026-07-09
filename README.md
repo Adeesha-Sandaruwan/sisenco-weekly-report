@@ -29,7 +29,14 @@ Before you begin, ensure you have the following installed:
 * [PostgreSQL](https://www.postgresql.org/) (Running locally or via a cloud provider like Supabase)
 * Git
 
----
+## Clone the Repository
+
+Clone the project to your local machine:
+
+```bash
+git clone https://github.com/Adeesha-Sandaruwan/sisenco-weekly-report.git
+cd sisenco-weekly-report
+```
 
 ### 1️⃣ Database Configuration
 
