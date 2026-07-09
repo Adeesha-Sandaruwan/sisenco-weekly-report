@@ -95,6 +95,23 @@ npm run dev
 
 Click the local link provided in the terminal (usually `http://localhost:5173`) to open login screen in your browser.
 
+
+In your frontend terminal, start the Vite development server:
+
+```bash
+# Use these Demo credentials to quick sign-in
+Manager
+
+Email: manager@sisenco.com
+Password: password123
+
+Team_Member
+
+Email: member@sisenco.com
+Password: password123
+
+```
+
 ## 🌟 System Architecture & Highlights
 
 | Feature | Description |
