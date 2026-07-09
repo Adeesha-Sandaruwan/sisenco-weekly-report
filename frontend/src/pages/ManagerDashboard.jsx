@@ -1,18 +1,16 @@
 import { useState, useEffect, useMemo } from 'react';
 import api from '../api/axios';
-import { Calendar, Clock, User, Briefcase, Filter, AlertCircle, TrendingUp, CheckCircle2, Activity, FileText } from 'lucide-react';
+import { Calendar, Clock, User, Briefcase, Filter, AlertCircle, TrendingUp, CheckCircle2, Activity, FileText, Link as LinkIcon, ShieldAlert, CheckCircle } from 'lucide-react';
 import { BarChart, Bar, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
 export default function ManagerDashboard() {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Advanced Filtering State
   const [filterMember, setFilterMember] = useState('');
   const [filterProject, setFilterProject] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
 
-  // Strict-Mode Compliant Data Fetching
   useEffect(() => {
     let isMounted = true;
     const fetchReports = async () => {
@@ -56,7 +54,6 @@ export default function ManagerDashboard() {
     });
   }, [reports, filterMember, filterProject, filterStatus]);
 
-  // --- Core Analytics & Visualization Engine ---
   const analytics = useMemo(() => {
     const now = new Date();
     const currentWeekStart = new Date(now.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1))).setHours(0,0,0,0);
@@ -70,7 +67,6 @@ export default function ManagerDashboard() {
     
     const openBlockers = filteredReports.filter(r => r.blockers && r.blockers.trim() !== '' && r.status !== 'SUBMITTED').length;
 
-    // 1. Tasks Completed Trend Over Time (Area Chart)
     const trendMap = {};
     filteredReports.forEach(r => {
       const date = new Date(r.weekEndDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -81,7 +77,6 @@ export default function ManagerDashboard() {
     });
     const trendData = Object.values(trendMap).sort((a,b) => new Date(a.date) - new Date(b.date));
 
-    // 2. Report Submission Status by Team Member (Stacked Bar Chart)
     const memberStatusMap = {};
     filteredReports.forEach(r => {
       const name = `${r.user.firstName} ${r.user.lastName}`;
@@ -90,7 +85,6 @@ export default function ManagerDashboard() {
     });
     const memberStatusData = Object.values(memberStatusMap);
 
-    // 3. Workload Distribution by Project (Donut Chart)
     const projectHours = {};
     filteredReports.forEach(r => {
       if (!projectHours[r.project.name]) projectHours[r.project.name] = 0;
@@ -103,7 +97,6 @@ export default function ManagerDashboard() {
       color: CHART_COLORS[index % CHART_COLORS.length]
     }));
 
-    // 4. Recent Activity Feed (Top 5 latest reports)
     const activityFeed = [...reports].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
 
     return { submittedThisWeek, complianceRate, openBlockers, trendData, memberStatusData, projectWorkloadData, activityFeed };
@@ -127,6 +120,23 @@ export default function ManagerDashboard() {
   ];
 
   const complianceRing = analytics.complianceRate * 3.6;
+
+  const renderList = (text, dotColor = 'bg-[#5b7cfa]') => {
+    if (!text) return <p className="text-sm italic text-slate-500">None provided.</p>;
+    const items = text.split('\n').filter(item => item.trim() !== '');
+    if (items.length === 0) return <p className="text-sm italic text-slate-500">None provided.</p>;
+    
+    return (
+      <ul className="mt-3 space-y-2.5">
+        {items.map((item, index) => (
+          <li key={index} className="flex items-start gap-3">
+            <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full shadow-[0_0_8px_rgba(255,255,255,0.2)] ${dotColor}`} />
+            <span className="text-sm leading-6 text-slate-300">{item}</span>
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   if (loading) {
     return (
@@ -392,24 +402,24 @@ export default function ManagerDashboard() {
             <div>
               <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Team Member</label>
               <select value={filterMember} onChange={(e) => setFilterMember(e.target.value)} className={inputClass}>
-                <option value="">All Members</option>
-                {uniqueMembers.map((member) => <option key={member.id} value={member.id}>{member.firstName} {member.lastName}</option>)}
+                <option value="" className="bg-slate-900 text-slate-100">All Members</option>
+                {uniqueMembers.map((member) => <option key={member.id} value={member.id} className="bg-slate-900 text-slate-100">{member.firstName} {member.lastName}</option>)}
               </select>
             </div>
             <div>
               <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Project</label>
               <select value={filterProject} onChange={(e) => setFilterProject(e.target.value)} className={inputClass}>
-                <option value="">All Projects</option>
-                {uniqueProjects.map((project) => <option key={project.id} value={project.id}>{project.name}</option>)}
+                <option value="" className="bg-slate-900 text-slate-100">All Projects</option>
+                {uniqueProjects.map((project) => <option key={project.id} value={project.id} className="bg-slate-900 text-slate-100">{project.name}</option>)}
               </select>
             </div>
             <div>
               <label className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Status</label>
               <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className={inputClass}>
-                <option value="">All Statuses</option>
-                <option value="PENDING">Pending</option>
-                <option value="SUBMITTED">Submitted</option>
-                <option value="LATE">Late</option>
+                <option value="" className="bg-slate-900 text-slate-100">All Statuses</option>
+                <option value="PENDING" className="bg-slate-900 text-slate-100">Pending</option>
+                <option value="SUBMITTED" className="bg-slate-900 text-slate-100">Submitted</option>
+                <option value="LATE" className="bg-slate-900 text-slate-100">Late</option>
               </select>
             </div>
           </div>
@@ -422,58 +432,80 @@ export default function ManagerDashboard() {
       <section className="grid grid-cols-1 gap-6 pb-10 lg:grid-cols-2 2xl:grid-cols-3">
         {filteredReports.map((report) => (
           <div key={report.id} className="premium-card flex flex-col p-5 sm:p-6 md:p-8 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-[0_24px_80px_rgba(2,6,23,0.45)]">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between border-b border-white/5 pb-6">
               <div>
-                <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
-                  <User size={18} className="text-[#9bb0ff]" />
+                <h3 className="flex items-center gap-2 text-xl font-semibold text-white tracking-tight">
+                  <User size={18} className="text-[#5b7cfa]" />
                   {report.user.firstName} {report.user.lastName}
                 </h3>
-                <p className="mt-1.5 flex items-center gap-2 text-sm text-slate-400">
-                  <Briefcase size={14} /> {report.project.name}
+                <p className="mt-2 flex items-center gap-2 text-sm text-slate-400">
+                  <Briefcase size={14} className="text-slate-500" /> {report.project.name}
                 </p>
               </div>
               <select
                 value={report.status}
                 onChange={(e) => handleStatusChange(report.id, e.target.value)}
-                className={`w-full appearance-none rounded-full border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.35em] outline-none transition sm:w-auto ${
-                  report.status === 'PENDING' ? 'border-amber-500/20 bg-amber-500/10 text-amber-100' :
-                  report.status === 'SUBMITTED' ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-100' :
-                  'border-rose-500/20 bg-rose-500/10 text-rose-100'
+                className={`w-full appearance-none rounded-xl border px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.35em] outline-none transition sm:w-auto cursor-pointer shadow-sm ${
+                  report.status === 'PENDING' ? 'border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20' :
+                  report.status === 'SUBMITTED' ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20' :
+                  'border-rose-500/30 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20'
                 }`}
               >
-                <option value="PENDING">Pending</option>
-                <option value="SUBMITTED">Submitted</option>
-                <option value="LATE">Late</option>
+                <option value="PENDING" className="bg-slate-900 text-amber-500 font-semibold">Pending</option>
+                <option value="SUBMITTED" className="bg-slate-900 text-emerald-500 font-semibold">Submitted</option>
+                <option value="LATE" className="bg-slate-900 text-rose-500 font-semibold">Late</option>
               </select>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-4 border-b border-white/10 pb-6 text-sm text-slate-400">
-              <span className="flex items-center gap-2"><Calendar size={16} /> {new Date(report.weekStartDate).toLocaleDateString()}</span>
-              <span className="flex items-center gap-2"><Clock size={16} /> {report.hoursWorked || 0} hrs</span>
+            <div className="mt-5 flex flex-wrap gap-5 text-sm text-slate-400">
+              <span className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
+                <Calendar size={14} className="text-[#9bb0ff]" /> {new Date(report.weekStartDate).toLocaleDateString()}
+              </span>
+              <span className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
+                <Clock size={14} className="text-[#9bb0ff]" /> {report.hoursWorked || 0} hrs
+              </span>
             </div>
 
-            <div className="mt-6 flex-1 space-y-6">
-              <div>
-                <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Tasks Planned</span>
-                <p className="text-sm leading-7 text-slate-200">{report.tasksPlanned}</p>
+            <div className="mt-8 flex-1 space-y-8">
+              
+              <div className="rounded-2xl bg-white/[0.02] p-5 border border-white/[0.05]">
+                <span className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.35em] text-slate-400">
+                  <CheckCircle size={14} className="text-[#5b7cfa]" />
+                  Tasks Planned
+                </span>
+                {renderList(report.tasksPlanned, 'bg-[#5b7cfa]')}
               </div>
-              <div>
-                <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Tasks Completed</span>
-                <p className="text-sm leading-7 text-slate-200">{report.tasksCompleted}</p>
+
+              <div className="rounded-2xl bg-white/[0.02] p-5 border border-white/[0.05]">
+                <span className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.35em] text-slate-400">
+                  <CheckCircle2 size={14} className="text-emerald-400" />
+                  Tasks Completed
+                </span>
+                {renderList(report.tasksCompleted, 'bg-emerald-400')}
               </div>
-              {report.blockers && (
-                <div className="rounded-[24px] border border-rose-500/15 bg-rose-500/10 p-4">
-                  <span className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.35em] text-rose-200">Blockers</span>
-                  <p className="text-sm leading-7 text-rose-100">{report.blockers}</p>
+
+              {report.blockers && report.blockers.trim() !== '' && (
+                <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-5 shadow-[0_4px_20px_rgba(244,63,94,0.05)]">
+                  <span className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.35em] text-rose-300">
+                    <ShieldAlert size={14} />
+                    Blockers
+                  </span>
+                  {renderList(report.blockers, 'bg-rose-400')}
                 </div>
               )}
-              {report.notes && (
-                <div>
-                  <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-400">Notes & Links</span>
-                  <p className="break-all text-sm leading-7 text-[#9bb0ff]">{report.notes}</p>
+
+              {report.notes && report.notes.trim() !== '' && (
+                <div className="rounded-2xl bg-white/[0.02] p-5 border border-white/[0.05]">
+                  <span className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.35em] text-slate-400">
+                    <LinkIcon size={14} className="text-cyan-400" />
+                    Notes & Links
+                  </span>
+                  {renderList(report.notes, 'bg-cyan-400')}
                 </div>
               )}
             </div>
+
           </div>
         ))}
       </section>

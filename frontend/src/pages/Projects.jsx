@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import api from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
-import { Briefcase, Plus, Trash2, Edit2, X, Users, Check, ArrowRight, ShieldCheck, FileText } from 'lucide-react';
+import { Briefcase, Plus, Trash2, Edit2, X, Users, Check, ArrowRight, ShieldCheck, FileText, User } from 'lucide-react';
 
 export default function Projects() {
   const { user } = useContext(AuthContext);
@@ -203,7 +203,18 @@ export default function Projects() {
 
               <div className="relative z-10 mb-4 flex items-center gap-3 text-[#9bb0ff] transition-transform duration-500 group-hover:scale-110 origin-left"><Briefcase size={24} /></div>
               <h3 className="relative z-10 mb-2 pr-20 text-lg font-semibold text-white">{project.name}</h3>
-              <p className="relative z-10 mb-6 flex-1 text-sm leading-7 text-slate-300">{project.description}</p>
+              <p className="relative z-10 mb-4 flex-1 text-sm leading-7 text-slate-300">{project.description}</p>
+
+              {project.users && project.users.length > 0 && (
+                <div className="relative z-10 mb-6 flex flex-wrap gap-2">
+                  {project.users.map(u => (
+                    <span key={u.id} className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-300">
+                      <User size={12} className="text-[#9bb0ff]" />
+                      {u.firstName} {u.lastName}
+                    </span>
+                  ))}
+                </div>
+              )}
 
               <div className="relative z-10 mt-auto flex items-center justify-between border-t border-white/10 pt-4">
                 <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-500">Created {new Date(project.createdAt).toLocaleDateString()}</span>
